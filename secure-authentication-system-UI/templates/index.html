@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Shield - Advanced Authentication</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container">
+        <div class="card">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h1 id="main-title">Secure Shield</h1>
+                <p id="main-subtitle" class="subtitle">Advanced Authentication System</p>
+            </div>
+
+            <!-- Toast Notifications -->
+            <div id="toast" class="toast info">
+                <i id="toast-icon" class="fa-solid fa-circle-info"></i>
+                <span id="toast-msg">Notification Message</span>
+            </div>
+
+            <!-- Form Tabs -->
+            <div id="auth-tabs" class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                <button class="tab-btn" onclick="switchTab('reset')">Reset</button>
+            </div>
+
+            <!-- Forms Area -->
+            <div id="forms-container">
+                
+                <!-- Login Form -->
+                <div id="login-form" class="form-section active">
+                    <div class="input-group">
+                        <input id="login_user" type="text" placeholder="Username" autocomplete="username">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="input-group">
+                        <input id="login_pass" type="password" placeholder="Password" autocomplete="current-password">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="forgot-link">
+                        <a href="#" onclick="switchTab('reset'); return false;">Forgot Password?</a>
+                    </div>
+                    <button class="btn-primary" onclick="login()">
+                        <span>Sign In</span>
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </button>
+                </div>
+
+                <!-- Register Form -->
+                <div id="register-form" class="form-section">
+                    <div class="input-group">
+                        <input id="reg_user" type="text" placeholder="Choose Username" autocomplete="username">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div class="input-group">
+                        <input id="reg_pass" type="password" placeholder="Create Password" autocomplete="new-password">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <div class="input-group">
+                        <input id="reg_q" type="text" placeholder="Security Question (e.g. Favorite Pet)">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div class="input-group">
+                        <input id="reg_a" type="password" placeholder="Answer to Security Question">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <button class="btn-primary" onclick="register()">
+                        <span>Create Account</span>
+                        <i class="fa-solid fa-user-check"></i>
+                    </button>
+                </div>
+
+                <!-- Password Reset Form -->
+                <div id="reset-form" class="form-section">
+                    <!-- Step 1: Request Question -->
+                    <div id="reset-step-1">
+                        <p class="subtitle" style="margin-bottom: 1.25rem;">Enter your username to fetch your security question.</p>
+                        <div class="input-group">
+                            <input id="reset_user" type="text" placeholder="Username" autocomplete="username">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <button class="btn-primary" onclick="fetchQuestion()">
+                            <span>Verify Username</span>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Answer & Reset -->
+                    <div id="reset-step-2" style="display:none;">
+                        <div class="reset-q-box" id="reset-q-box">
+                            <div class="reset-q-label">Your Security Question</div>
+                            <div class="reset-q-text" id="reset-q-text">Favorite pet?</div>
+                        </div>
+                        <div class="input-group">
+                            <input id="reset_a" type="password" placeholder="Your Answer">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div class="input-group">
+                            <input id="reset_new_pass" type="password" placeholder="New Password" autocomplete="new-password">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <button class="btn-primary" onclick="resetPassword()">
+                            <span>Reset Password</span>
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="btn-primary btn-danger" style="margin-top: 10px;" onclick="cancelReset()">
+                            <span>Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logged In / Dashboard Area -->
+            <div id="dashboard" class="profile-card" style="display:none;">
+                <div class="avatar-container">
+                    <div class="avatar-bg">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <span id="role-badge" class="role-badge user">User</span>
+                </div>
+                <div id="welcome-msg" class="welcome-msg">Welcome, hammam!</div>
+                
+                <p class="subtitle" style="text-align: left; margin-bottom: 0.5rem; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Active Session Token</p>
+                <div class="token-box">
+                    <span id="session-token-text">----------------</span>
+                    <button class="copy-btn" onclick="copyToken()"><i class="fa-regular fa-copy"></i></button>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button id="admin-action-btn" class="btn-primary btn-admin" onclick="listUsers()" style="display:none;">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Admin: View User Directory</span>
+                    </button>
+                    
+                    <button class="btn-primary btn-danger" onclick="logout()">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+
+                <!-- Admin User List View -->
+                <div id="users-table-container" class="users-table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role Privilege</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+    "hammam": {
+        "hash_algorithm": "argon2id",
+        "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$TuHJrpFoFGnT05BYiB8eHQ$HaKnKT44L5a8EIX1kVUjUHs2uEY1H7S8tt3K5Pj5DSw",
+        "security_question": "fav color",
+        "security_answer_hash": "$argon2id$v=19$m=65536,t=3,p=4$4lmq05rvsFPLdVn9ooNe6w$D5p6opQie/rz44aslNbUoV+zw3H3WJ0z73scKnKlzoY",
+        "role": "admin",
+        "failed_attempts": 0,
+        "locked_until": 0,
+        "session_token_hash": null
+    },
+    "mohamed": {
+        "hash_algorithm": "argon2id",
+        "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$6RIZi90g5xzvrwNreK/tLw$CpAQb932Vxd/XstxfF6v9dFVZu+3bY570WlD0Bf32vE",
+        "security_question": "fav hobby",
+        "security_answer_hash": "$argon2id$v=19$m=65536,t=3,p=4$4zOEuSrLVW60meQetQaRtQ$eqadOViMgWVTEEuocrYtpKF+xXdep3U14ClfB1JY5EI",
+        "role": "user",
+        "failed_attempts": 0,
+        "locked_until": 0,
+        "session_token_hash": null
+    }
+}
